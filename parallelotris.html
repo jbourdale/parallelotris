@@ -34,9 +34,14 @@
 
   <body onload="init();" style="background-color:#D4D4D4">
     <p class="enonce2">PARALLELOTRIS</strong></p>
-    
-    <p id="gameover" style="border-radius:10px; border: 1px solid black ;width:150px;display:none">GAME OVER !</p>
-    <p class="enonce">SCORE : <strong id="score">0 point(s)</strong> </p>
+  
+    <div class="enonce">
+      <p>SCORE : <strong id="score">0 point(s)</strong> </p>
+      <div id="gameover" style="border-radius:10px; border: 1px solid black ;width:150px;display:none">
+        <p>GAME OVER !</p>
+        <button onclick="init()">Rejouer</button>
+      </div>
+    </div>
 
     <table style="margin:auto">
       <tbody>

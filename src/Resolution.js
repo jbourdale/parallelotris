@@ -1,7 +1,8 @@
 // JavaScript Document
 var NextChute;
 
-function Colision(p, dirx, diry, a, b) {
+function Colision(p, dirx, diry, a, b, addedScore) {
+  console.log("Colision", p, dirx, diry, a, b)
   p.f = 16;
   p.addEventListener("tick", Dep);
   fond.addChild(p);
@@ -25,18 +26,20 @@ function Colision(p, dirx, diry, a, b) {
   boom5.x = p.x + dirx * 4 - 30;
   boom5.y = p.y + diry * 4 + 30;
   fond2.addChild(boom5);
+
+  console.log("PIECE CODE : ", p.n)
+
   function Dep(event) {
     event.target.x = event.target.x + dirx / 4;
     event.target.y = event.target.y + diry / 4;
     event.target.alpha = event.target.alpha - 0.05;
     event.target.f--;
-    //console.log(event.target.f);
     if (event.target.f < 1) {
       count--;
       tableau_I[a][b] = "X";
-      score = score + 50;
-      var sc = document.getElementById("score");
-      sc.firstChild.nodeValue = score;
+
+      SetScore(score + addedScore);
+      
       if (count == 0) {
         //console.log("end");
         fond.removeAllChildren();
@@ -66,9 +69,7 @@ function Collapse(p, a, b) {
     if (event.target.f < 1) {
       count--;
       tableau_I[a][b] = "X";
-      score = score + 100;
-      var sc = document.getElementById("score");
-      sc.firstChild.nodeValue = score;
+      SetScore(score + 100);
       if (count == 0) {
         console.log("end");
         fond.removeAllChildren();
@@ -81,6 +82,21 @@ function Collapse(p, a, b) {
       event.target.removeEventListener("tick", Dep);
     }
   }
+}
+
+function GetPieceScore(pieceCode) {
+  console.log("pieceCode : ", pieceCode)
+  const piece = Object.values(OPTIONS.Pieces).find((optionPiece) => {
+    console.log("optionPiece : ", optionPiece)
+    return optionPiece.code == pieceCode
+  });
+  return piece.score
+}
+
+function SetScore(newScore) {
+  score = newScore
+  var sc = document.getElementById("score");
+  sc.firstChild.nodeValue = score;
 }
 
 function Doublon(s, t) {
@@ -119,7 +135,7 @@ function Solve() {
     }
   }
 
-  //console.log(tableau_F);
+  console.log("tableau_F", tableau_F);
   for (i = 9; i >= 0; i--) {
     for (j = 0; j < 7; j++) {
       if (tableau_F[i][j] == "Z") {
@@ -138,8 +154,9 @@ function Solve() {
                 temp.push(s);
                 dy = tableau_F[i][j][k][0] - i;
                 dx = tableau_F[i][j][k][1] - j;
-                tableau_I[tableau_F[i][j][k][0]][tableau_F[i][j][k][1]].n =
-                  tableau_F[i][j][k][2];
+                tableau_I[tableau_F[i][j][k][0]][tableau_F[i][j][k][1]].n = tableau_F[i][j][k][2];
+                console.log("tableau_I[", tableau_F[i][j][k][0], "][", tableau_F[i][j][k][1], "] = ",tableau_F[i][j][k][2] )
+                newPieceCode = tableau_F[i][j][k][2]
               }
               break;
             }
@@ -147,7 +164,7 @@ function Solve() {
           //console.log(dx+"/"+dy);
           if (dx != 0 || dy != 0) {
             count++;
-            Colision(tableau_I[i][j], dx * 15, dy * 15, i, j);
+            Colision(tableau_I[i][j], dx * 15, dy * 15, i, j, GetPieceScore(newPieceCode));
           }
         }
       }
@@ -348,8 +365,4 @@ function IsProp(i, j, dirx, diry) {
     }
   }
   return "X";
-}
-
-function Recommencer() {
-  window.location.reload(true);
 }

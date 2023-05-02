@@ -15,6 +15,37 @@ score = 0;
 var fond = new createjs.Container();
 var fond2 = new createjs.Container();
 
+const OPTIONS = {
+  POURCENTAGE_PIECE_ET_PROPS: 70,
+  Pieces: {
+    QUAD_QUELCONQUE: {
+      code: 0,
+      pourcentageTirage: 60,
+      score: 0
+    },
+    PARALELOGRAMME: {
+      code: 1,
+      pourcentageTirage: 20,
+      score: 50
+    },
+    RECTANGLE: {
+      code: 2,
+      pourcentageTirage: 15,
+      score: 100
+    },
+    LOSANGE: {
+      code: 3,
+      pourcentageTirage: 5,
+      score: 150
+    },
+    CARRE: {
+      code: 4,
+      pourcentageTirage: 0,
+      score: 200
+    }
+  },
+}
+
 function debug(t) {
   var i, j;
   var tableau_debug = Init_Tableau();
@@ -31,6 +62,11 @@ function debug(t) {
 }
 
 function init() {
+  // Reset in case of play again
+  SetScore(0)
+  document.getElementById("gameover").style.display = "none";
+
+  // Build Scene
   canvas = document.getElementById("canvas");
   exportRoot = new lib.Parallelotris();
 
@@ -167,9 +203,7 @@ function NewTirage() {
   var p, i, j;
   for (i = 0; i < 3; i++) {
     for (j = 0; j < 7; j++) {
-      //console.log(i+"/"+j+":"+tableau_I[i][j]);
       if (tableau_I[i][j] != "X") {
-        var sc = score + ";0";
         document.getElementById("gameover").style.display = "block";
         Stop_Control();
         console.log("stop");
@@ -198,15 +232,11 @@ function NewTirage() {
   );
   var c, d;
 
-  if (Math.random() < 0.7) {
+  if (Math.random()*100 < OPTIONS.POURCENTAGE_PIECE_ET_PROPS) {
     p = new lib.Piece();
     p.type = "figure";
     const pieceCode = Tirage_Piece()
     p.n = pieceCode
-    // c = Math.round(Math.random() * 10);
-    // d = parseInt(a[c]);
-
-    // p.n = d;
     p.gotoAndStop(pieceCode);
   
   } else {
@@ -409,28 +439,9 @@ function Regle() {
   }
 }
 
-const tirage = {
-  QUAD_QUELCONQUE: {
-    code: 0,
-    pourcentageTirage: 60,
-  },
-  PARALELOGRAME: {
-    code: 1,
-    pourcentageTirage: 20,
-  },
-  RECTANGLE: {
-    code: 2,
-    pourcentageTirage: 15,
-  },
-  LOSANGE: {
-    code: 3,
-    pourcentageTirage: 5,
-  },
-};
-
 function Tirage_Piece() {
   // Convertir l'objet en tableau de chances
-  const chances = Object.values(tirage).map((t) => t.pourcentageTirage);
+  const chances = Object.values(OPTIONS.Pieces).map((t) => t.pourcentageTirage);
 
   // Calculer le total des chances
   const total_chances = chances.reduce((total, chance) => total + chance);
@@ -440,10 +451,10 @@ function Tirage_Piece() {
 
   // Déterminer le résultat en fonction du nombre aléatoire généré
   let somme_chances = 0;
-  for (const [index, t] of Object.entries(tirage)) {
+  for (const [index, t] of Object.entries(OPTIONS.Pieces)) {
     somme_chances += t.pourcentageTirage;
     if (random < somme_chances) {
-      return tirage[index].code;
+      return OPTIONS.Pieces[index].code;
     }
   }
 }
