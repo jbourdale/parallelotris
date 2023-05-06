@@ -27,8 +27,6 @@ function Colision(p, dirx, diry, a, b, addedScore) {
   boom5.y = p.y + diry * 4 + 30;
   fond2.addChild(boom5);
 
-  console.log("PIECE CODE : ", p.n)
-
   function Dep(event) {
     event.target.x = event.target.x + dirx / 4;
     event.target.y = event.target.y + diry / 4;
@@ -135,7 +133,6 @@ function Solve() {
     }
   }
 
-  console.log("tableau_F", tableau_F);
   for (i = 9; i >= 0; i--) {
     for (j = 0; j < 7; j++) {
       if (tableau_F[i][j] == "Z") {
@@ -155,7 +152,6 @@ function Solve() {
                 dy = tableau_F[i][j][k][0] - i;
                 dx = tableau_F[i][j][k][1] - j;
                 tableau_I[tableau_F[i][j][k][0]][tableau_F[i][j][k][1]].n = tableau_F[i][j][k][2];
-                console.log("tableau_I[", tableau_F[i][j][k][0], "][", tableau_F[i][j][k][1], "] = ",tableau_F[i][j][k][2] )
                 newPieceCode = tableau_F[i][j][k][2]
               }
               break;
@@ -323,14 +319,11 @@ function NearCarre(i, j, dx, dy) {
 }
 
 function IsProp(i, j, dirx, diry) {
-  //alert((i+dirx)+"/"+(j+diry))
-  //console.log(i+","+j+"///"+(i+dirx)+","+(j+diry));
   if (tableau_I[i + dirx][j + diry].type == "figure") {
     var res = new Array(i + dirx, j + diry);
     var q = tableau_I[i + dirx][j + diry].n;
     var p = tableau_I[i][j].n;
-    //alert(dirx+"/"+diry);
-    //alert(p+"/"+q);
+
     if ((p == 0 || p == 1) && q == 0) {
       res.push(1);
       return res;

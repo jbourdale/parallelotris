@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Parallelotris</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="libs/jquery-1.js"></script>
+    <script src="libs/easeljs-0.js"></script>
+    <script src="libs/tweenjs-0.js"></script>
+    <script src="libs/movieclip-0.js"></script>
+
+    <script src="src/options.js"></script>
+    <script src="src/Rules.js"></script>
+    <script src="src/Parallelotris.js"></script>
+    <script src="src/Puzzle2D_Controle.js"></script>
+    <script src="src/Code.js"></script>
+    <script src="src/Resolution.js"></script>
+  </head>
+
+  <body onload="init();">
+    <div class="content">
+        <div class="content__summary">
+            <div class="content__summary__heading">
+                <h1>Parallelotris</h1>
+                <p class="content__summary__score">Score: <span id="score">N/A</span></p>
+            </div>
+            <div class="content__summary__license">
+                <hr/>
+                <p>Auteur: <a href="http://mathematiques-medias.discipline.ac-lille.fr/Parallelotris/Parallelotris.html">Vincent Joly</a></p>
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/fr/">
+                    <img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/fr/80x15.png">
+                </a>
+            </div>
+        </div>
+        <div class="content__game">
+            <canvas id="canvas" width="420" height="600" style="background-color:#000000"></canvas>
+            <div class="content__game__gameover" id="gameover_modal">
+                <h2>Partie terminée</h2>
+                <p class="content__game__gameover__score">Score: <span id="gameover-score-value">N/A</span></p>
+                <button class="btn" onclick="init()">Rejouer</button>
+            </div>
+        </div>
+        <div class="content__controls">
+            <div class="content__controls__rules">
+                <button class="btn" id="rules-btn" onclick="openRules()">Afficher les règles</button>
+            </div>
+            <div class="content__controls__buttons">
+                <canvas id="canvas2" width="150" height="150" style="background-color:#000000"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="rules" id="rules_modal">
+        <div class="rules__exit" id="rules-exit-btn">
+            <span>X</span>
+        </div>
+        <h2>Règles</h2>
+
+        <div class="rules__concept">
+            <h3>Principe</h3>
+            <p>
+                Il faut construire des quadrilatères particuliers à l'aide des propriétés vues en classe de 5ème. Pour cela, il faut juxtaposer une pièce "Propriété" à côté d'une pièce "Quadrilatère".Les pièces peuvent aussi être contrôlées par le clavier avec les touches flèches et la barre d'espace. 
+                Le but est de créer des carrés côte à côte afin de les faire disparaitre. Une transformation rapporte 50 points et une disparition de carré rapporte 100 points.Les transformations se font à partir des pièces "Propriétés" vers les pièces "Quadrilatères", et dans cet ordre d'interaction.<br>
+                1- Vers le bas.<br>
+                2- Vers la gauche.<br>
+                3- Vers la droite.<br>
+                4- Vers le haut.<br>    
+            </p>
+        </div>
+
+        <div class="rules__properties">
+            <h3>Les pièces "Propriétés"</h3>
+            <div class="rules__properties__line">
+                <img src="rules/2par2.png"/>
+                <p>Les côtés opposés sont parallèles deux à deux</p>
+            </div>
+            <div class="rules__properties__line">
+                <img src="rules/2egal.png"/>
+                <p>Deux côtés consécutifs sont égaux.</p>
+            </div>
+            <div class="rules__properties__line">
+                <img src="rules/1angle.png"/>
+                <p>Le quadrilatère possède un angle droit.</p>
+            </div>
+            <div class="rules__properties__line">
+                <img src="rules/3angle.png"/>
+                <p>Le quadrilatère possède 3 angles droits.</p>
+            </div>
+            <div class="rules__properties__line">
+                <img src="rules/4egal.png"/>
+                <p>Les 4 côtés du quadrilatère sont égaux.</p>
+            </div>
+            <div class="rules__properties__line">
+                <img src="rules/diagegal.png"/>
+                <p>Les diagonales du quadrilatère sont de la même longueur.</p>
+            </div>
+            <div class="rules__properties__line">
+                <img src="rules/diagmil.png"/>
+                <p>Les diagonales du quadrilatère se coupent en leur milieu.</p>
+            </div>
+            <div class="rules__properties__line">
+                <img src="rules/diagperp.png"/>
+                <p>Les diagonales du quadrilatère sont perpendiculaires.</p>
+            </div>
+        </div>
+
+        <div class="rules__shapes">
+            <h3>Les pièces "Quadrilatères"</h3>
+            <div class="rules__shapes__line">
+                <img src="rules/Quad.png"/>
+                <p>Le quadrilatère quelconque</p>
+            </div>
+            <div class="rules__shapes__line">
+                <img src="rules/parallelogra.png"/>
+                <p>Le parallélogramme</p>
+            </div>
+            <div class="rules__shapes__line">
+                <img src="rules/losange.png"/>
+                <p>Le losange</p>
+            </div>
+            <div class="rules__shapes__line">
+                <img src="rules/rectangle.png"/>
+                <p>Le rectangle</p>
+            </div>
+            <div class="rules__shapes__line">
+                <img src="rules/carre.png"/>
+                <p>Le carré</p>
+            </div>
+        </div>
+
+        <div class="rules__combinations">
+            <h3>Les combinaisons</h3>
+            <p>Elles correspondent aux conditions minimales suffisantes pour effectuer la transformation d'un quadrilatère en un autre.</p>
+        
+            
+            <div class="rules__combinations__line">
+                <div class="rules__combinations__line__images">
+                    <img src="rules/Quad.png"><img src="rules/2par2.png"><img src="rules/fleche.png"><img src="rules/parallelogra.png"/>
+                </div>
+                <p>Si un quadrilatère a ses côtés opposés parallèles, alors c'est un parallélogramme.</p>
+            </div>       
+
+            <div class="rules__combinations__line">
+                <div class="rules__combinations__line__images">
+                    <img src="rules/Quad.png"><img src="rules/diagmil.png"><img src="rules/fleche.png"><img src="rules/parallelogra.png"/>
+                </div>
+                <p>Si un quadrilatère a ses diagonales se coupant en leur milieu, alors c'est un parallélogramme.</p>
+            </div>    
+
+            <div class="rules__combinations__line">
+                <div class="rules__combinations__line__images">
+                    <img src="rules/Quad.png"><img src="rules/3angle.png"><img src="rules/fleche.png"><img src="rules/rectangle.png"/>
+                </div>
+                <p>Si un quadrilatère a 3 angles droits, alors c'est un rectangle.</p>
+            </div>       
+
+            <div class="rules__combinations__line">
+                <div class="rules__combinations__line__images">
+                    <img src="rules/Quad.png"><img src="rules/4egal.png"><img src="rules/fleche.png"><img src="rules/losange.png"/>
+                </div>
+                <p>Si un quadrilatère a 4 côtés égaux, alors c'est un losange.</p>
+            </div>       
+
+            <div class="rules__combinations__line">
+                <div class="rules__combinations__line__images">
+                    <img src="rules/parallelogra.png"><img src="rules/2egal.png"><img src="rules/fleche.png"><img src="rules/losange.png"/>
+                </div>
+                <p>Si un parallélogramme a 2 côtés consécutifs égaux, alors c'est un losange.</p>
+            </div>    
+                      
+            <div class="rules__combinations__line">
+                <div class="rules__combinations__line__images">
+                    <img src="rules/parallelogra.png"><img src="rules/diagperp.png"><img src="rules/fleche.png"><img src="rules/losange.png"/>
+                </div>
+                <p>Si un parallélogramme a ses diagonales perpendiculaires, alors c'est un losange.</p>
+            </div>       
+
+            <div class="rules__combinations__line">
+                <div class="rules__combinations__line__images">
+                    <img src="rules/parallelogra.png"><img src="rules/diagegal.png"><img src="rules/fleche.png"><img src="rules/rectangle.png"/>
+                </div>
+                <p>Si un parallélogramme a ses diagonales de même longueur, alors c'est un rectangle.</p>
+            </div>
+
+            <div class="rules__combinations__line">
+                <div class="rules__combinations__line__images">
+                    <img src="rules/parallelogra.png"><img src="rules/1angle.png"><img src="rules/fleche.png"><img src="rules/rectangle.png"/>
+                </div>
+                <p>Si un parallélogramme a 1 angle droit, alors c'est un rectangle.</p>
+            </div>
+
+            <div class="rules__combinations__line">
+                <div class="rules__combinations__line__images">
+                    <img src="rules/rectangle.png"><img src="rules/diagperp.png"><img src="rules/fleche.png"><img src="rules/carre.png"/>
+                </div>
+                <p>Si un rectangle a ses diagonales perpendiculaires, alors c'est un carré.</p>
+            </div>
+
+            <div class="rules__combinations__line">
+                <div class="rules__combinations__line__images">
+                    <img src="rules/rectangle.png"><img src="rules/2egal.png"><img src="rules/fleche.png"><img src="rules/carre.png"/>
+                </div>
+                <p>Si un rectangle a 2 côtés consécutifs égaux, alors c'est un carré.</p>
+            </div>
+
+            <div class="rules__combinations__line">
+                <div class="rules__combinations__line__images">
+                    <img src="rules/losange.png"><img src="rules/diagegal.png"><img src="rules/fleche.png"><img src="rules/carre.png"/>
+                </div>
+                <p>Si un losange a ses diagonales de même longueur, alors c'est un carré.</p>
+            </div>
+
+            <div class="rules__combinations__line">
+                <div class="rules__combinations__line__images">
+                    <img src="rules/losange.png"><img src="rules/1angle.png"><img src="rules/fleche.png"><img src="rules/carre.png"/>
+                </div>
+                <p>Si un losange a 1 angle droit, alors c'est un carré.</p>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>

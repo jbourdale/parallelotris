@@ -1,3 +1,48 @@
+/**
+ * This file defines all the graphical elements related to the game itself using Easeljs library 
+ * EaselJS documentation : https://createjs.com/docs/easeljs/modules/EaselJS.html
+ * 
+ * Objects: 
+ *  - Parallelotris
+ *    - Create the black rectangle (the play zone)
+ *    - Create the redLine displayed to separate the new blocks and the one already placed
+ * 
+ *  - Prop
+ *    - All the shape_{x} correspond to a graphical representation of each properties. 
+ *    - The long string is a SWF image encoded path. More details here : https://createjs.com/docs/easeljs/classes/Graphics.html#method_decodePath
+ *    - Each Prop object created contains all the graphical representation of every prop possible, and using the timeline methods, we are able to define if a prop object is this or that kind of prop
+ *    - Corresponding table of the variable name and their in game representation
+ *      - shape_1: 
+ *      - shape_2:  
+ *      - shape_3:
+ *      - shape_4:
+ *      - shape_5:
+ *      - shape_6:
+ *      - shape_7:
+ *      - shape_8:
+ *      - shape_9:
+ *      - shape_10:
+ *      - shape_11:
+ *      - shape_12:
+ *    - shape_13 and shape_14 are the background of a prop tile
+ * 
+ *  - Piece
+ *    - It has exactly the same behavior as the Prop object refer to the above description.
+ *    - Corresponding table of the variable name and their in game representation
+ *      - shape_15:
+ *      - shape_16:
+ *      - shape_17:
+ *      - shape_18:
+ *      - shape_19:
+ * 
+ *  - Flash
+ *    - Define the graphical representation of the flash that occures when 2 pieces are merged or collapsed
+ *    - Only used by Transforme object
+ * 
+ *  - Transforme
+ *    - Define a serie of transformation applied to the Flash "image" to create a annimation
+ */
+
 (function (lib, img, cjs) {
   var p; // shortcut to reference prototypes
 
@@ -6,17 +51,11 @@
     this.initialize();
 
     // Calque 1
-    this.signature = new cjs.Text("", "bold 10px Calibri", "#CCCCCC");
-    this.signature.textAlign = "center";
-    this.signature.lineHeight = 12;
-    this.signature.lineWidth = 100;
-    this.signature.setTransform(411, -1);
+    this.redLine = new cjs.Shape();
+    this.redLine.graphics.f().s("#FF0000").ss(2.2, 1, 1).p("EghVAAAMBCrAAA");
+    this.redLine.setTransform(210.5, 180);
 
-    this.shape = new cjs.Shape();
-    this.shape.graphics.f().s("#FF0000").ss(2.2, 1, 1).p("EghVAAAMBCrAAA");
-    this.shape.setTransform(210.5, 180);
-
-    this.addChild(this.shape, this.signature);
+    this.addChild(this.redLine);
   }).prototype = p = new cjs.Container();
   p.nominalBounds = new cjs.Rectangle(-2.9, -1, 468, 181.1);
 

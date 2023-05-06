@@ -15,59 +15,15 @@ score = 0;
 var fond = new createjs.Container();
 var fond2 = new createjs.Container();
 
-const OPTIONS = {
-  POURCENTAGE_PIECE_ET_PROPS: 70,
-  Pieces: {
-    QUAD_QUELCONQUE: {
-      code: 0,
-      pourcentageTirage: 60,
-      score: 0
-    },
-    PARALELOGRAMME: {
-      code: 1,
-      pourcentageTirage: 20,
-      score: 50
-    },
-    RECTANGLE: {
-      code: 2,
-      pourcentageTirage: 15,
-      score: 100
-    },
-    LOSANGE: {
-      code: 3,
-      pourcentageTirage: 5,
-      score: 150
-    },
-    CARRE: {
-      code: 4,
-      pourcentageTirage: 0,
-      score: 200
-    }
-  },
-}
-
-function debug(t) {
-  var i, j;
-  var tableau_debug = Init_Tableau();
-  for (i = 0; i < 10; i++) {
-    for (j = 0; j < 7; j++) {
-      if (t[i][j] != "X") {
-        tableau_debug[i][j] = "O";
-      } else {
-        tableau_debug[i][j] = "X";
-      }
-    }
-  }
-  console.log(tableau_debug);
-}
-
 function init() {
   // Reset in case of play again
   SetScore(0)
-  document.getElementById("gameover").style.display = "none";
+  document.getElementById("gameover_modal").style.display = "none";
+  displayOrHideRulesBtn()
 
   // Build Scene
   canvas = document.getElementById("canvas");
+
   exportRoot = new lib.Parallelotris();
 
   stage = new createjs.Stage(canvas);
@@ -88,7 +44,7 @@ function init() {
   createjs.Touch.enable(stage2);
   stage2.preventSelection = false;
   
-  exportRoot.signature.addEventListener("click", mail);
+  // exportRoot.signature.addEventListener("click", mail);
   function mail(event) {
     location.href = "mailto:joly.poubelle@neuf.fr";
   }
@@ -204,16 +160,13 @@ function NewTirage() {
   for (i = 0; i < 3; i++) {
     for (j = 0; j < 7; j++) {
       if (tableau_I[i][j] != "X") {
-        document.getElementById("gameover").style.display = "block";
-        Stop_Control();
-        console.log("stop");
+        gameover()
         return true;
       } else {
         Init_Control();
       }
     }
   }
-  var a = new Array("3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3");
   var b = new Array(
     "0",
     "1",
@@ -425,20 +378,6 @@ function Moove(p, dir) {
   }
 }
 
-function Regle() {
-  if (document.getElementById("reg").style.display == "none") {
-    document.getElementById("reg").style.display = "block";
-    document.getElementById("tab1").style.display = "block";
-    document.getElementById("tab2").style.display = "block";
-    document.getElementById("tab3").style.display = "block";
-  } else {
-    document.getElementById("reg").style.display = "none";
-    document.getElementById("tab1").style.display = "none";
-    document.getElementById("tab2").style.display = "none";
-    document.getElementById("tab3").style.display = "none";
-  }
-}
-
 function Tirage_Piece() {
   // Convertir l'objet en tableau de chances
   const chances = Object.values(OPTIONS.Pieces).map((t) => t.pourcentageTirage);
@@ -457,4 +396,16 @@ function Tirage_Piece() {
       return OPTIONS.Pieces[index].code;
     }
   }
+}
+
+
+function gameover() {
+  // Set score in the gameover modal
+  var sc = document.getElementById("gameover-score-value");
+  sc.firstChild.nodeValue = score;
+
+  // Display the modal
+  document.getElementById("gameover_modal").style.display = "flex"
+
+  Stop_Control();
 }
